@@ -31,7 +31,7 @@ namespace io
 {
 
 template<typename ResolveArgumentType, typename ErrorArgumentType = error::Error>
-class Promise: boost::noncopyable
+class Promise
 {
 public:
     typedef ResolveArgumentType ValueType;
@@ -40,23 +40,26 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service& ioService)
+    Promise(const Promise&) = delete;
+    Promise& operator=(const Promise&) = delete;
+
+    static Pointer defer(boost::asio::io_context& ioContext)
     {
-        return std::make_shared<Promise>(ioService);
+        return std::make_shared<Promise>(ioContext);
     }
 
-    static Pointer defer(boost::asio::io_service::strand& strand)
+    static Pointer defer(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
     {
         return std::make_shared<Promise>(strand);
     }
 
-    Promise(boost::asio::io_service& ioService)
-        : ioContextWrapper_(ioService)
+    Promise(boost::asio::io_context& ioContext)
+        : ioContextWrapper_(ioContext)
     {
 
     }
 
-    Promise(boost::asio::io_service::strand& strand)
+    Promise(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
         : ioContextWrapper_(strand)
     {
 
@@ -113,7 +116,7 @@ private:
 };
 
 template<typename ErrorArgumentType>
-class Promise<void, ErrorArgumentType>: boost::noncopyable
+class Promise<void, ErrorArgumentType>
 {
 public:
     typedef ErrorArgumentType ErrorType;
@@ -121,23 +124,26 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service& ioService)
+    Promise(const Promise&) = delete;
+    Promise& operator=(const Promise&) = delete;
+
+    static Pointer defer(boost::asio::io_context& ioContext)
     {
-        return std::make_shared<Promise>(ioService);
+        return std::make_shared<Promise>(ioContext);
     }
 
-    static Pointer defer(boost::asio::io_service::strand& strand)
+    static Pointer defer(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
     {
         return std::make_shared<Promise>(strand);
     }
 
-    Promise(boost::asio::io_service& ioService)
-        : ioContextWrapper_(ioService)
+    Promise(boost::asio::io_context& ioContext)
+        : ioContextWrapper_(ioContext)
     {
 
     }
 
-    Promise(boost::asio::io_service::strand& strand)
+    Promise(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
         : ioContextWrapper_(strand)
     {
 
@@ -194,30 +200,33 @@ private:
 };
 
 template<>
-class Promise<void, void>: boost::noncopyable
+class Promise<void, void>
 {
 public:
     typedef std::function<void()> ResolveHandler;
     typedef std::function<void()> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service& ioService)
+    Promise(const Promise&) = delete;
+    Promise& operator=(const Promise&) = delete;
+
+    static Pointer defer(boost::asio::io_context& ioContext)
     {
-        return std::make_shared<Promise>(ioService);
+        return std::make_shared<Promise>(ioContext);
     }
 
-    static Pointer defer(boost::asio::io_service::strand& strand)
+    static Pointer defer(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
     {
         return std::make_shared<Promise>(strand);
     }
 
-    Promise(boost::asio::io_service& ioService)
-        : ioContextWrapper_(ioService)
+    Promise(boost::asio::io_context& ioContext)
+        : ioContextWrapper_(ioContext)
     {
 
     }
 
-    Promise(boost::asio::io_service::strand& strand)
+    Promise(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
         : ioContextWrapper_(strand)
     {
 
@@ -274,7 +283,7 @@ private:
 };
 
 template<typename ResolveArgumentType>
-class Promise<ResolveArgumentType, void>: boost::noncopyable
+class Promise<ResolveArgumentType, void>
 {
 public:
     typedef ResolveArgumentType ValueType;
@@ -282,23 +291,26 @@ public:
     typedef std::function<void(void)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service& ioService)
+    Promise(const Promise&) = delete;
+    Promise& operator=(const Promise&) = delete;
+
+    static Pointer defer(boost::asio::io_context& ioContext)
     {
-        return std::make_shared<Promise>(ioService);
+        return std::make_shared<Promise>(ioContext);
     }
 
-    static Pointer defer(boost::asio::io_service::strand& strand)
+    static Pointer defer(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
     {
         return std::make_shared<Promise>(strand);
     }
 
-    Promise(boost::asio::io_service& ioService)
-        : ioContextWrapper_(ioService)
+    Promise(boost::asio::io_context& ioContext)
+        : ioContextWrapper_(ioContext)
     {
 
     }
 
-    Promise(boost::asio::io_service::strand& strand)
+    Promise(boost::asio::strand<boost::asio::io_context::executor_type>& strand)
         : ioContextWrapper_(strand)
     {
 

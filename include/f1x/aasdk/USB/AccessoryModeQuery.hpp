@@ -19,6 +19,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/noncopyable.hpp>
 #include <libusb.h>
 #include <list>
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
@@ -32,14 +33,14 @@ namespace aasdk
 namespace usb
 {
 
-class AccessoryModeQuery: public IAccessoryModeQuery, boost::noncopyable
+class AccessoryModeQuery: public IAccessoryModeQuery, public boost::noncopyable
 {
 public:
-    AccessoryModeQuery(boost::asio::io_service& ioService, IUSBEndpoint::Pointer usbEndpoint);
+    AccessoryModeQuery(boost::asio::io_context& ioContext, IUSBEndpoint::Pointer usbEndpoint);
     void cancel() override;
 
 protected:
-    boost::asio::io_service::strand strand_;
+    boost::asio::strand<boost::asio::io_context::executor_type> strand_;
     IUSBEndpoint::Pointer usbEndpoint_;
     common::Data data_;
     Promise::Pointer promise_;
